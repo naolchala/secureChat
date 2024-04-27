@@ -47,7 +47,7 @@ const LoginPage = () => {
 		>
 			<Card
 				boxShadow={"xl"}
-				w={{ base: "90%", md: "40%", "2xl": "30%" }}
+				w={{ base: "90%", md: "40%", xl: "30%" }}
 				bg="background"
 				p="6"
 				borderRadius={"3xl"}

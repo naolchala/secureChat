@@ -1,6 +1,4 @@
 import {
-	Avatar,
-	AvatarBadge,
 	Button,
 	Card,
 	CardBody,
@@ -9,12 +7,7 @@ import {
 	Heading,
 	Icon,
 } from "@chakra-ui/react";
-import {
-	IoLockClosed,
-	IoLockOpen,
-	IoPersonAdd,
-	IoRefresh,
-} from "react-icons/io5";
+import { IoLockClosed, IoPersonAdd } from "react-icons/io5";
 import { FormInput } from "../components/Form/FormInput";
 import * as yup from "yup";
 import { useFormik } from "formik";
