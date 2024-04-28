@@ -26,7 +26,7 @@ export const ProfileIcon = () => {
 				></IconButton>
 			</PopoverTrigger>
 			<PopoverContent>
-				<PopoverBody>
+				<PopoverBody p="5">
 					<Flex gap={"4"}>
 						<Avatar
 							src={

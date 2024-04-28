@@ -20,7 +20,13 @@ export const User = ({ avatar, name, username }: UserProps) => {
 				bg: "blackAlpha.100",
 			}}
 		>
-			<Avatar name={name} src={getAvatarUrl(avatar)} size={"sm"}>
+			<Avatar
+				name={name}
+				src={getAvatarUrl(avatar)}
+				size={"sm"}
+				border={"2px solid"}
+				borderColor={"black"}
+			>
 				<AvatarBadge boxSize={"1em"} bg="primary" />
 			</Avatar>
 			<Flex direction={"column"}>
