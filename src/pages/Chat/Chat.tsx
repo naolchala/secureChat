@@ -7,13 +7,11 @@ import {
 	Heading,
 	Icon,
 	IconButton,
-	MenuItem,
 	Popover,
 	PopoverBody,
 	PopoverContent,
 	PopoverTrigger,
 	Text,
-	VStack,
 } from "@chakra-ui/react";
 import { IoExit, IoLockClosed, IoPersonCircle } from "react-icons/io5";
 import { generateRandomAvatar } from "../../utils/avatar";
