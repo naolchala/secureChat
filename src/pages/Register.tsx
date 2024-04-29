@@ -25,6 +25,7 @@ const RegisterPage = () => {
 	};
 
 	const schema = yup.object().shape({
+		avatar: yup.string(),
 		displayName: yup.string().required("Please enter your name"),
 		username: yup.string().required("Please enter your username"),
 		password: yup

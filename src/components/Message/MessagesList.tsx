@@ -1,7 +1,9 @@
 import { Flex } from "@chakra-ui/react";
 import { Message } from "./Message";
+// import { EmptyMessages } from "./EmptyMessages";
 
 export const MessagesList = () => {
+	// return <EmptyMessages />;
 	return (
 		<Flex
 			flex="1"
