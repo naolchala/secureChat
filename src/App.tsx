@@ -9,9 +9,23 @@ import {
 } from "@chakra-ui/react";
 import { IoLockClosed } from "react-icons/io5";
 import { useCurrentUser } from "./states/query/useCurrentUser";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function App() {
-	useCurrentUser();
+	const navigate = useNavigate();
+	const userQuery = useCurrentUser();
+
+	useEffect(() => {
+		if (userQuery.data) {
+			navigate("/chat");
+		}
+
+		if (userQuery.isError) {
+			navigate("/login");
+		}
+	}, [navigate, userQuery.data, userQuery.isError]);
+
 	return (
 		<Flex
 			w={"full"}

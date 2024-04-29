@@ -3,10 +3,12 @@ import AuthAPI from "../../api/auth";
 import { useToken } from "../../utils/token";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../user/useUser";
 
 export const CURRENT_USER = "CURRENT_USER";
 export const useCurrentUser = () => {
 	const { token } = useToken();
+	const { setUser } = useUser();
 	const router = useNavigate();
 	const query = useQuery({
 		queryKey: [CURRENT_USER],
@@ -14,19 +16,17 @@ export const useCurrentUser = () => {
 	});
 
 	useEffect(() => {
-		console.log(token);
+		console.log({ token });
 		if (!token) {
 			router("/login");
 		}
 	}, [token, router]);
 
-	if (query.data) {
-		router("/chat");
-	}
-
-	if (query.error) {
-		router("/login");
-	}
+	useEffect(() => {
+		if (query.data) {
+			setUser(query.data);
+		}
+	}, [query.data, setUser]);
 
 	return query;
 };

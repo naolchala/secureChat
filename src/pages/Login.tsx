@@ -14,7 +14,7 @@ import { IoLockClosed, IoLockOpen } from "react-icons/io5";
 import { FormInput } from "../components/Form/FormInput";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../states/query/useLoginMutation";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "../types/ErrorResponse";
@@ -23,6 +23,7 @@ import { useState } from "react";
 const LoginPage = () => {
 	const [error, setError] = useState<string | undefined>(undefined);
 	const loginMutation = useLoginMutation();
+	const navigate = useNavigate();
 	const initialValues = {
 		username: "",
 		password: "",
@@ -46,6 +47,7 @@ const LoginPage = () => {
 				},
 				onSuccess: () => {
 					setError(undefined);
+					navigate("/chat");
 				},
 				onError: (err) => {
 					if (err instanceof AxiosError) {

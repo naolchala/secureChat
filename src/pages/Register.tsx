@@ -14,7 +14,7 @@ import { IoLockClosed, IoPersonAdd } from "react-icons/io5";
 import { FormInput } from "../components/Form/FormInput";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { generateRandomAvatar } from "../utils/avatar";
 import { AvatarInput } from "../components/Form/AvatarInput";
 import { useState } from "react";
@@ -25,6 +25,7 @@ import { ErrorResponse } from "../types/ErrorResponse";
 const RegisterPage = () => {
 	const [error, setError] = useState<string | undefined>(undefined);
 	const registerMutation = useRegisterMutation();
+	const navigate = useNavigate();
 	const initialValues = {
 		displayName: "",
 		username: "",
@@ -57,6 +58,7 @@ const RegisterPage = () => {
 				},
 				onSuccess: () => {
 					setError(undefined);
+					navigate("/chat");
 				},
 				onError: (err) => {
 					if (err instanceof AxiosError) {

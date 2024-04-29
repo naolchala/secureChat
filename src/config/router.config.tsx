@@ -3,6 +3,7 @@ import App from "../App";
 import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
 import ChatPage from "../pages/Chat/Chat";
+import { Guard } from "../components/Guard/Guard";
 
 const router = createBrowserRouter([
 	{
@@ -19,7 +20,11 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "/chat",
-		element: <ChatPage />,
+		element: (
+			<Guard>
+				<ChatPage></ChatPage>
+			</Guard>
+		),
 	},
 ]);
 
