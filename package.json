@@ -14,6 +14,9 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource/poppins": "^5.0.14",
+    "@tanstack/react-query": "^5.32.0",
+    "@tanstack/react-query-devtools": "^5.32.0",
+    "axios": "^1.6.8",
     "dayjs": "^1.11.11",
     "formik": "^2.4.6",
     "framer-motion": "^11.1.7",
@@ -36,6 +39,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-mkcert": "^1.17.5"
   }
 }

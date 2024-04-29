@@ -1,4 +1,7 @@
 import {
+	Alert,
+	AlertIcon,
+	AlertTitle,
 	Button,
 	Card,
 	CardBody,
@@ -12,8 +15,14 @@ import { FormInput } from "../components/Form/FormInput";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
+import { useLoginMutation } from "../states/query/useLoginMutation";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "../types/ErrorResponse";
+import { useState } from "react";
 
 const LoginPage = () => {
+	const [error, setError] = useState<string | undefined>(undefined);
+	const loginMutation = useLoginMutation();
 	const initialValues = {
 		username: "",
 		password: "",
@@ -30,9 +39,28 @@ const LoginPage = () => {
 	const formik = useFormik({
 		initialValues,
 		validationSchema: schema,
-		onSubmit: (_, actions) => {
-			setTimeout(() => actions.setSubmitting(false), 500);
-			return;
+		onSubmit: (values, actions) => {
+			loginMutation.mutate(values, {
+				onSettled: () => {
+					actions.setSubmitting(false);
+				},
+				onSuccess: () => {
+					setError(undefined);
+				},
+				onError: (err) => {
+					if (err instanceof AxiosError) {
+						const error = err.response?.data as ErrorResponse;
+						if (error.type === "VALIDATION_ERROR") {
+							actions.setFieldError(
+								error.error.field ?? "",
+								error.error.message
+							);
+						} else {
+							setError(error.error.message);
+						}
+					}
+				},
+			});
 		},
 	});
 
@@ -47,7 +75,7 @@ const LoginPage = () => {
 		>
 			<Card
 				boxShadow={"xl"}
-				w={{ base: "90%", md: "40%", xl: "30%" }}
+				w={{ base: "90%", md: "40%", xl: "35%", "2xl": "30%" }}
 				bg="background"
 				p="6"
 				borderRadius={"3xl"}
@@ -59,7 +87,19 @@ const LoginPage = () => {
 							SecureChat
 						</Heading>
 					</HStack>
-					<Flex mt="14" direction={"column"}>
+					{error && (
+						<Alert
+							mt="8"
+							status="error"
+							variant={"solid"}
+							borderRadius={"md"}
+							size={"sm"}
+						>
+							<AlertIcon />
+							<AlertTitle>{error}</AlertTitle>
+						</Alert>
+					)}
+					<Flex mt={error ? "4" : "14"} direction={"column"}>
 						<form
 							onChange={formik.handleChange}
 							onSubmit={formik.handleSubmit}
