@@ -10,11 +10,33 @@ import {
 	Divider,
 	Button,
 	Text,
+	useToast,
+	Spinner,
 } from "@chakra-ui/react";
 import { IoPersonCircle, IoExit } from "react-icons/io5";
-import { generateRandomAvatar } from "../../utils/avatar";
+import { generateRandomAvatar, getAvatarUrl } from "../../utils/avatar";
+import { useToken } from "../../utils/token";
+import { useUser } from "../../states/user/useUser";
 
 export const ProfileIcon = () => {
+	const toast = useToast();
+	const { clearToken } = useToken();
+	const { clearUser, user } = useUser();
+
+	const handleLogout = () => {
+		clearToken();
+		clearUser();
+		toast({
+			position: "top",
+			status: "warning",
+			title: "Signed out successfully",
+		});
+	};
+
+	if (!user) {
+		return <Spinner />;
+	}
+
 	return (
 		<Popover>
 			<PopoverTrigger>
@@ -29,16 +51,13 @@ export const ProfileIcon = () => {
 				<PopoverBody p="5">
 					<Flex gap={"4"}>
 						<Avatar
-							src={
-								"https://api.dicebear.com/8.x/fun-emoji/svg?seed=" +
-								generateRandomAvatar()
-							}
-							name={generateRandomAvatar()}
+							src={getAvatarUrl(user.avatar)}
+							name={user.displayName}
 						/>
 						<Flex direction={"column"} alignItems={"flex-start"}>
-							<Text fontWeight={"600"}>John Doe</Text>
+							<Text fontWeight={"600"}>{user.displayName}</Text>
 							<Text fontSize={"sm"} color={"gray.600"}>
-								@johndoe123
+								{user.username}
 							</Text>
 						</Flex>
 					</Flex>
@@ -49,6 +68,7 @@ export const ProfileIcon = () => {
 						variant="ghost"
 						colorScheme="red"
 						leftIcon={<Icon as={IoExit} />}
+						onClick={handleLogout}
 					>
 						Logout
 					</Button>
