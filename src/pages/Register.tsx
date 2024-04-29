@@ -1,4 +1,7 @@
 import {
+	Alert,
+	AlertIcon,
+	AlertTitle,
 	Button,
 	Card,
 	CardBody,
@@ -14,8 +17,14 @@ import { useFormik } from "formik";
 import { Link } from "react-router-dom";
 import { generateRandomAvatar } from "../utils/avatar";
 import { AvatarInput } from "../components/Form/AvatarInput";
+import { useState } from "react";
+import { useRegisterMutation } from "../states/query/useRegisterMutation";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "../types/ErrorResponse";
 
 const RegisterPage = () => {
+	const [error, setError] = useState<string | undefined>(undefined);
+	const registerMutation = useRegisterMutation();
 	const initialValues = {
 		displayName: "",
 		username: "",
@@ -41,9 +50,28 @@ const RegisterPage = () => {
 	const formik = useFormik({
 		initialValues,
 		validationSchema: schema,
-		onSubmit: (_, actions) => {
-			setTimeout(() => actions.setSubmitting(false), 500);
-			return;
+		onSubmit: (values, actions) => {
+			registerMutation.mutate(values, {
+				onSettled: () => {
+					actions.setSubmitting(false);
+				},
+				onSuccess: () => {
+					setError(undefined);
+				},
+				onError: (err) => {
+					if (err instanceof AxiosError) {
+						const error = err.response?.data as ErrorResponse;
+						if (error.type === "VALIDATION_ERROR") {
+							actions.setFieldError(
+								error.error.field ?? "",
+								error.error.message
+							);
+						} else {
+							setError(error.error.message);
+						}
+					}
+				},
+			});
 		},
 	});
 
@@ -72,7 +100,20 @@ const RegisterPage = () => {
 							SecureChat
 						</Heading>
 					</HStack>
-					<Flex mt="14" direction={"column"}>
+					{error && (
+						<Alert
+							mt="8"
+							status="error"
+							variant={"solid"}
+							borderRadius={"md"}
+							size={"sm"}
+						>
+							<AlertIcon />
+							<AlertTitle>{error}</AlertTitle>
+						</Alert>
+					)}
+
+					<Flex mt={error ? "4" : "14"} direction={"column"}>
 						<form
 							onChange={formik.handleChange}
 							onSubmit={formik.handleSubmit}

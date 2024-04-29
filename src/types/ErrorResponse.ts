@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 export interface GeneralErrorResponse {
 	statusCode: number;
 	message: string;

@@ -6,8 +6,8 @@ import AuthAPI from "../../api/auth";
 
 export const LOGIN = "LOGIN";
 export const useLoginMutation = () => {
-	const toast = useToast();
 	const { setToken } = useToken();
+	const toast = useToast();
 	const mutation = useMutation({
 		mutationKey: [LOGIN],
 		mutationFn: (data: LoginAPIProps) => AuthAPI.login(data),

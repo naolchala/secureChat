@@ -7,6 +7,18 @@ export interface LoginAPIResponse {
 	token: string;
 }
 
+export interface RegisterAPIProps {
+	username: string;
+	password: string;
+	displayName: string;
+	avatar: string;
+}
+
+export interface RegisterAPIResponse {
+	user: CurrentUserResponse;
+	token: string;
+}
+
 export interface CurrentUserResponse {
 	id: string;
 	displayName: string;
