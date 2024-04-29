@@ -1,5 +1,6 @@
-import { axiosInstance } from "../utils/api";
+import { axiosInstance, axiosWithToken } from "../utils/api";
 import {
+	CurrentUserResponse,
 	LoginAPIProps,
 	LoginAPIResponse,
 	RegisterAPIProps,
@@ -23,9 +24,17 @@ const register = async (data: RegisterAPIProps) => {
 	return user;
 };
 
+const getCurrentUser = async () => {
+	const user = await axiosWithToken
+		.get<CurrentUserResponse>("/me")
+		.then((res) => res.data);
+	return user;
+};
+
 const AuthAPI = {
 	login,
 	register,
+	getCurrentUser,
 };
 
 export default AuthAPI;
