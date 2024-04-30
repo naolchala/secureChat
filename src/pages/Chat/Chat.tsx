@@ -1,9 +1,10 @@
-import { Flex, Icon, IconButton, Input } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Sidebar } from "../../components/Sidebar/Sidebar";
-import { IoAttach, IoSend } from "react-icons/io5";
-import { MessagesList } from "../../components/Message/MessagesList";
+import { useSocket } from "../../states/socket/useSocket";
+import { MessageContainer } from "../../components/Message/MessageContainer";
 
 const ChatPage = () => {
+	useSocket();
 	return (
 		<Flex
 			bg="primary"
@@ -24,55 +25,7 @@ const ChatPage = () => {
 			>
 				<Sidebar />
 				<Flex as="main" flex="1" bg="#fffa" p="6">
-					<Flex
-						bg="background"
-						w="full"
-						h="full"
-						borderRadius={"lg"}
-						boxShadow={"xl"}
-						direction={"column"}
-						overflow={"hidden"}
-					>
-						<MessagesList />
-						<Flex
-							bg="white"
-							boxShadow={"xl"}
-							p="2"
-							m="4"
-							borderRadius={"xl"}
-							gap={"2"}
-						>
-							<label htmlFor="fileInput">
-								<IconButton
-									aria-label="Send"
-									colorScheme="primary"
-									variant={"ghost"}
-								>
-									<Icon as={IoAttach} fontSize={"xl"} />
-								</IconButton>
-								<Input
-									id="fileInput"
-									type="file"
-									fontSize={"sm"}
-									variant={"unstyled"}
-									placeholder="Type your message here"
-									hidden
-								/>
-							</label>
-							<Input
-								fontSize={"sm"}
-								variant={"unstyled"}
-								placeholder="Type your message here"
-							/>
-							<IconButton
-								aria-label="Send"
-								colorScheme="primary"
-								variant={"ghost"}
-							>
-								<Icon as={IoSend} />
-							</IconButton>
-						</Flex>
-					</Flex>
+					<MessageContainer />
 				</Flex>
 			</Flex>
 		</Flex>

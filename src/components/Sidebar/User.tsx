@@ -1,27 +1,36 @@
 import { Flex, Avatar, AvatarBadge, Text } from "@chakra-ui/react";
 import { getAvatarUrl } from "../../utils/avatar";
+import { ContactResponse } from "../../api/contact.types";
+import { useSelectedContact } from "../../states/user/useSelectedUser";
 
 interface UserProps {
-	id: string;
-	name: string;
-	username: string;
-	avatar: string;
+	contact: ContactResponse;
 }
-export const User = ({ avatar, name, username }: UserProps) => {
+export const User = ({ contact }: UserProps) => {
+	const { setSelectedContact, selectedContact } = useSelectedContact();
+	const { displayName, avatar, username } = contact;
 	return (
 		<Flex
+			p="3"
+			bg={selectedContact?.id === contact.id ? "white" : undefined}
+			boxShadow={selectedContact?.id === contact.id ? "md" : undefined}
 			gap={"4"}
 			alignItems={"center"}
 			cursor={"pointer"}
-			p="3"
 			borderRadius={"lg"}
 			transition={"all 200ms ease-in-out"}
 			_hover={{
-				bg: "blackAlpha.100",
+				bg:
+					selectedContact?.id !== contact.id
+						? "blackAlpha.100"
+						: undefined,
+			}}
+			onClick={() => {
+				setSelectedContact(contact);
 			}}
 		>
 			<Avatar
-				name={name}
+				name={contact.displayName}
 				src={getAvatarUrl(avatar)}
 				size={"sm"}
 				border={"2px solid"}
@@ -31,7 +40,7 @@ export const User = ({ avatar, name, username }: UserProps) => {
 			</Avatar>
 			<Flex direction={"column"}>
 				<Text fontWeight={"bold"} fontSize={"sm"}>
-					{name}
+					{displayName}
 				</Text>
 				<Text fontSize={"xs"} color={"gray"}>
 					{username}

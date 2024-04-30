@@ -102,13 +102,7 @@ export const ContactList = () => {
 			}}
 		>
 			{contactQuery.data.map((contact) => (
-				<User
-					key={contact.id}
-					avatar={contact.avatar}
-					name={contact.displayName}
-					username={contact.username}
-					id={contact.id}
-				/>
+				<User key={contact.id} contact={contact} />
 			))}
 		</Flex>
 	);

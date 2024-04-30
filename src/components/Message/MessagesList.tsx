@@ -1,9 +1,50 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
 import { Message } from "./Message";
-// import { EmptyMessages } from "./EmptyMessages";
+import {
+	useMessages,
+	useMessagesQuery,
+} from "../../states/query/message/useMessages";
+import { EmptyMessages } from "./EmptyMessages";
+import { useUser } from "../../states/user/useUser";
+import { useSelectedContact } from "../../states/user/useSelectedUser";
 
 export const MessagesList = () => {
-	// return <EmptyMessages />;
+	const { user } = useUser();
+	const { messages } = useMessages();
+	const { selectedContact } = useSelectedContact();
+	const messagesQuery = useMessagesQuery();
+	if (messagesQuery.isLoading) {
+		return (
+			<Flex
+				flex={"1"}
+				direction={"column"}
+				alignItems={"center"}
+				justifyContent={"center"}
+			>
+				<Spinner />
+			</Flex>
+		);
+	}
+
+	if (messagesQuery.isError) {
+		return <Text>Error</Text>;
+	}
+
+	if (!messagesQuery.data || messagesQuery.data.length === 0) {
+		return <EmptyMessages />;
+	}
+
+	const data = selectedContact ? messages[selectedContact.id] ?? [] : [];
+	console.log({ data });
+
+	if (
+		!messagesQuery.data ||
+		messagesQuery.data.length === 0 ||
+		data.length == 0
+	) {
+		return <EmptyMessages />;
+	}
+
 	return (
 		<Flex
 			flex="1"
@@ -36,42 +77,9 @@ export const MessagesList = () => {
 				},
 			}}
 		>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message Here is an example message Here is an example message"
-			/>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message"
-				isMine
-			/>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message"
-			/>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message"
-				isMine
-			/>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message"
-			/>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message"
-				isMine
-			/>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message"
-			/>
-			<Message
-				createdAt={new Date()}
-				message="Here is an example message"
-				isMine
-			/>
+			{data.map((message) => (
+				<Message key={message.id} message={message} />
+			))}
 		</Flex>
 	);
 };

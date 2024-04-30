@@ -1,49 +1,75 @@
-import { Flex, Avatar, Text } from "@chakra-ui/react";
+import { Flex, Avatar, Text, SlideFade } from "@chakra-ui/react";
 import dayjs from "dayjs";
+import { MessageResponse } from "../../api/message.types";
+import { useUser } from "../../states/user/useUser";
+import { useQueryClient } from "@tanstack/react-query";
+import { GET_CONTACTS } from "../../states/query/contact/useContacts";
+import { ContactResponse } from "../../api/contact.types";
+import { getAvatarUrl } from "../../utils/avatar";
 
 interface MessageProps {
-	isMine?: boolean;
-	message: string;
-	createdAt: Date;
+	message: MessageResponse;
 }
 
-export const Message = ({ isMine, message, createdAt }: MessageProps) => {
+export const Message = ({ message }: MessageProps) => {
+	const client = useQueryClient();
+	const { user } = useUser();
+	const isMine = user?.id === message.sender_id;
+	const contacts = client.getQueryData([GET_CONTACTS]) as
+		| ContactResponse[]
+		| undefined;
+	const contact = contacts?.find(
+		(c) =>
+			(isMine && c.id === message.receiver_id) ||
+			c.id === message.sender_id
+	) ?? {
+		avatar: "GUEST",
+		username: "Loading",
+		displayName: "Loading",
+		createdAt: new Date().toUTCString(),
+		updatedAt: new Date().toUTCString(),
+		id: isMine ? message.receiver_id : message.sender_id,
+	};
+
 	return (
-		<Flex
-			direction={isMine ? "row-reverse" : "row"}
-			alignSelf={isMine ? "flex-end" : "flex-start"}
-			gap={"2"}
-			alignItems={"flex-end"}
-			maxW={"60%"}
-		>
-			<Avatar
-				name="Naol Chala"
-				size={"sm"}
-				border={"2px solid"}
-				borderColor={"white"}
-			></Avatar>
+		<SlideFade in>
 			<Flex
-				bg={isMine ? "primary" : "white"}
-				color={isMine ? "white" : "black"}
-				p="4"
-				pb="2"
-				borderRadius={"xl"}
-				borderBottomLeftRadius={!isMine ? "0" : undefined}
-				borderBottomRightRadius={isMine ? "0" : undefined}
-				boxShadow="md"
-				direction={"column"}
+				direction={isMine ? "row-reverse" : "row"}
+				alignSelf={isMine ? "flex-end" : "flex-start"}
+				gap={"2"}
+				alignItems={"flex-end"}
+				maxW={"60%"}
 			>
-				<Text as="p" fontSize={"xs"}>
-					{message}
-				</Text>
-				<Text
-					mt="2"
-					fontSize={"xs"}
-					color={isMine ? "gray.200" : "gray"}
+				<Avatar
+					name={contact.displayName}
+					src={getAvatarUrl(contact.avatar)}
+					size={"sm"}
+					border={"2px solid"}
+					borderColor={"white"}
+				></Avatar>
+				<Flex
+					bg={isMine ? "primary" : "white"}
+					color={isMine ? "white" : "black"}
+					p="4"
+					pb="2"
+					borderRadius={"xl"}
+					borderBottomLeftRadius={!isMine ? "0" : undefined}
+					borderBottomRightRadius={isMine ? "0" : undefined}
+					boxShadow="md"
+					direction={"column"}
 				>
-					{dayjs(createdAt).format("hh:mm A")}
-				</Text>
+					<Text as="p" fontSize={"xs"}>
+						{message.content}
+					</Text>
+					<Text
+						mt="2"
+						fontSize={"xs"}
+						color={isMine ? "gray.200" : "gray"}
+					>
+						{dayjs(message.createdAt).format("hh:mm A")}
+					</Text>
+				</Flex>
 			</Flex>
-		</Flex>
+		</SlideFade>
 	);
 };
