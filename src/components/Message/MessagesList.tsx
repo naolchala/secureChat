@@ -1,15 +1,13 @@
-import { Flex, Spinner, Text } from "@chakra-ui/react";
+import { Flex, ScaleFade, Spinner, Text } from "@chakra-ui/react";
 import { Message } from "./Message";
 import {
 	useMessages,
 	useMessagesQuery,
 } from "../../states/query/message/useMessages";
 import { EmptyMessages } from "./EmptyMessages";
-import { useUser } from "../../states/user/useUser";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
 
 export const MessagesList = () => {
-	const { user } = useUser();
 	const { messages } = useMessages();
 	const { selectedContact } = useSelectedContact();
 	const messagesQuery = useMessagesQuery();
@@ -30,19 +28,25 @@ export const MessagesList = () => {
 		return <Text>Error</Text>;
 	}
 
-	if (!messagesQuery.data || messagesQuery.data.length === 0) {
-		return <EmptyMessages />;
-	}
-
 	const data = selectedContact ? messages[selectedContact.id] ?? [] : [];
-	console.log({ data });
 
 	if (
 		!messagesQuery.data ||
 		messagesQuery.data.length === 0 ||
 		data.length == 0
 	) {
-		return <EmptyMessages />;
+		return (
+			<Flex
+				flex={"1"}
+				direction={"column"}
+				alignItems={"center"}
+				justifyContent={"center"}
+			>
+				<ScaleFade in>
+					<EmptyMessages />
+				</ScaleFade>
+			</Flex>
+		);
 	}
 
 	return (
