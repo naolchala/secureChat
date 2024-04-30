@@ -25,7 +25,7 @@ const register = async (data: RegisterAPIProps) => {
 };
 
 const getCurrentUser = async () => {
-	const { user } = await axiosWithToken
+	const { user } = await axiosWithToken()
 		.get<{ user: CurrentUserResponse }>("/me")
 		.then((res) => res.data);
 	return user;

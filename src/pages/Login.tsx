@@ -15,7 +15,7 @@ import { FormInput } from "../components/Form/FormInput";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../states/query/useLoginMutation";
+import { useLoginMutation } from "../states/query/auth/useLoginMutation";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "../types/ErrorResponse";
 import { useState } from "react";

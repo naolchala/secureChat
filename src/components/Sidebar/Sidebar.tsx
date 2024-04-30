@@ -10,10 +10,10 @@ import {
 	IconButton,
 } from "@chakra-ui/react";
 import { IoLockClosed, IoSearch, IoPersonAdd } from "react-icons/io5";
-import { generateRandomAvatar } from "../../utils/avatar";
 import { ProfileIcon } from "./ProfileIcon";
-import { User } from "./User";
 import { useState } from "react";
+import { ContactList } from "./ContactList";
+import { useAddContactMutation } from "../../states/query/contact/useAddContactMutation";
 
 const ChatModes = {
 	PERSONAL: "PERSONAL",
@@ -21,6 +21,8 @@ const ChatModes = {
 };
 
 export const Sidebar = () => {
+	const addMutation = useAddContactMutation();
+	const [username, setUsername] = useState("");
 	const [selectedMode, setSelectedMode] = useState(ChatModes.PERSONAL);
 	return (
 		<Flex as="aside" w="300px" bg="background" direction={"column"} p="5">
@@ -57,55 +59,35 @@ export const Sidebar = () => {
 					</Button>
 				))}
 			</Flex>
-			<Flex
-				flex="1"
-				direction={"column"}
-				overflow={"auto"}
-				gap={"2"}
-				sx={{
-					"&::-webkit-scrollbar": {
-						width: "8px",
-						height: "8px",
-					},
-					"&::-webkit-scrollbar-track": {
-						borderRadius: "5px",
-						backgroundColor: "gray.100", // Use Chakra UI theme colors
-					},
-					"&::-webkit-scrollbar-thumb": {
-						borderRadius: "9px",
-						backgroundColor: "gray.400", // Use Chakra UI theme colors
-						transition: "all 300ms",
-					},
-					"&::-webkit-scrollbar-thumb:hover": {
-						backgroundColor: "primary.700", // Use Chakra UI theme colors
-					},
-					"&::-webkit-scrollbar-thumb:active": {
-						backgroundColor: "primary.800", // Use Chakra UI theme colors
-					},
-				}}
-			>
-				{[...Array(10)].map((_, i) => (
-					<User
-						key={i}
-						avatar={generateRandomAvatar()}
-						name="John Doe"
-						username="johnDoe12"
-						id={`${i}`}
-					/>
-				))}
+			<Flex flex={"1"}>
+				<ContactList />
 			</Flex>
 			<Flex gap="2" mt="2">
 				<InputGroup>
 					<InputLeftElement>
 						<Icon as={IoSearch} />
 					</InputLeftElement>
-					<Input bg="white" boxShadow={"xl"} fontSize={"sm"} />
+					<Input
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+						placeholder="add contact by username"
+						bg="white"
+						boxShadow={"xl"}
+						fontSize={"xs"}
+					/>
 				</InputGroup>
 				<IconButton
 					aria-label="Add User"
 					colorScheme="primary"
 					boxShadow={"xl"}
 					borderRadius={"xl"}
+					isLoading={addMutation.isPending}
+					onClick={() => {
+						if (username)
+							addMutation.mutate(username, {
+								onSuccess: () => setUsername(""),
+							});
+					}}
 				>
 					<Icon as={IoPersonAdd} />
 				</IconButton>

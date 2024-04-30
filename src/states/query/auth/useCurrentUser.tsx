@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import AuthAPI from "../../api/auth";
-import { useToken } from "../../utils/token";
+import AuthAPI from "../../../api/auth";
+import { useToken } from "../../../utils/token";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../user/useUser";
+import { useUser } from "../../user/useUser";
 
 export const CURRENT_USER = "CURRENT_USER";
 export const useCurrentUser = () => {

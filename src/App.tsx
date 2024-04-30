@@ -8,7 +8,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { IoLockClosed } from "react-icons/io5";
-import { useCurrentUser } from "./states/query/useCurrentUser";
+import { useCurrentUser } from "./states/query/auth/useCurrentUser";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 

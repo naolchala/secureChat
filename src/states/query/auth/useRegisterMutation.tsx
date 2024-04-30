@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { RegisterAPIProps } from "../../api/auth.types";
-import AuthAPI from "../../api/auth";
+import { RegisterAPIProps } from "../../../api/auth.types";
+import AuthAPI from "../../../api/auth";
 import { useToast } from "@chakra-ui/react";
-import { useToken } from "../../utils/token";
-import { useUser } from "../user/useUser";
+import { useToken } from "../../../utils/token";
+import { useUser } from "../../user/useUser";
 
 export const REGISTER = "REGISTER";
 export const useRegisterMutation = () => {

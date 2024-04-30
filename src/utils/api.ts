@@ -11,11 +11,12 @@ export const axiosInstance = axios.create({
 	},
 });
 
-export const axiosWithToken = axios.create({
-	baseURL: BASE_URL,
-	headers: {
-		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "*",
-		Authorization: `Bearer ${localStorage.getItem(TOKEN)}`,
-	},
-});
+export const axiosWithToken = () =>
+	axios.create({
+		baseURL: BASE_URL,
+		headers: {
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
+			Authorization: `Bearer ${localStorage.getItem(TOKEN)}`,
+		},
+	});

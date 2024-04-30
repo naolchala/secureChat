@@ -14,16 +14,19 @@ import {
 	Spinner,
 } from "@chakra-ui/react";
 import { IoPersonCircle, IoExit } from "react-icons/io5";
-import { generateRandomAvatar, getAvatarUrl } from "../../utils/avatar";
+import { getAvatarUrl } from "../../utils/avatar";
 import { useToken } from "../../utils/token";
 import { useUser } from "../../states/user/useUser";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const ProfileIcon = () => {
+	const client = useQueryClient();
 	const toast = useToast();
 	const { clearToken } = useToken();
 	const { clearUser, user } = useUser();
 
 	const handleLogout = () => {
+		client.clear();
 		clearToken();
 		clearUser();
 		toast({

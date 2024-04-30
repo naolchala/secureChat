@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { generateRandomAvatar } from "../utils/avatar";
 import { AvatarInput } from "../components/Form/AvatarInput";
 import { useState } from "react";
-import { useRegisterMutation } from "../states/query/useRegisterMutation";
+import { useRegisterMutation } from "../states/query/auth/useRegisterMutation";
 import { AxiosError } from "axios";
 import { ErrorResponse } from "../types/ErrorResponse";
 
