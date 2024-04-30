@@ -1,14 +1,46 @@
 import { Flex, IconButton, Icon, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { IoAttach, IoSend } from "react-icons/io5";
-// import { useSocket } from "../../states/socket/useSocket";
+import { useSocket } from "../../states/socket/useSocket";
+import { useMessages } from "../../states/query/message/useMessages";
+import { useSelectedContact } from "../../states/user/useSelectedUser";
+import { useUser } from "../../states/user/useUser";
+import { v4 } from "uuid";
 
 export const MessageInput = () => {
+	const { user } = useUser();
+	const { selectedContact } = useSelectedContact();
+	const { addUserMessage } = useMessages();
 	const [message, setMessage] = useState("");
-	// const socket = useSocket();
+	const socket = useSocket();
+
+	const handleSendMessage = (e: FormEvent) => {
+		e.preventDefault();
+		if (selectedContact && user) {
+			const tempId = v4();
+			socket.emit("SEND_MESSAGE", {
+				message,
+				contact: selectedContact?.id,
+				tempId,
+			});
+
+			addUserMessage(selectedContact.id, {
+				id: tempId,
+				content: message,
+				createdAt: new Date().toString(),
+				sender_id: user?.id,
+				receiver_id: selectedContact.id,
+				updatedAt: new Date().toString(),
+				isTemp: true,
+			});
+		}
+		setMessage("");
+	};
 
 	return (
 		<Flex
+			as="form"
+			onSubmit={(e) => handleSendMessage(e)}
 			bg="white"
 			boxShadow={"xl"}
 			p="2"
@@ -44,6 +76,7 @@ export const MessageInput = () => {
 				aria-label="Send"
 				colorScheme="primary"
 				variant={"ghost"}
+				type="submit"
 			>
 				<Icon as={IoSend} />
 			</IconButton>

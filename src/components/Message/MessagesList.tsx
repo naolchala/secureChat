@@ -57,6 +57,7 @@ export const MessagesList = () => {
 			px="6"
 			overflow={"auto"}
 			gap={"2"}
+			w="full"
 			sx={{
 				"&::-webkit-scrollbar": {
 					position: "fixed",

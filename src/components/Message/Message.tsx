@@ -1,4 +1,4 @@
-import { Flex, Avatar, Text, SlideFade } from "@chakra-ui/react";
+import { Flex, Avatar, Text, SlideFade, Spinner } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { MessageResponse } from "../../api/message.types";
 import { useUser } from "../../states/user/useUser";
@@ -8,7 +8,7 @@ import { ContactResponse } from "../../api/contact.types";
 import { getAvatarUrl } from "../../utils/avatar";
 
 interface MessageProps {
-	message: MessageResponse;
+	message: MessageResponse & { isTemp?: boolean };
 }
 
 export const Message = ({ message }: MessageProps) => {
@@ -32,44 +32,52 @@ export const Message = ({ message }: MessageProps) => {
 	};
 
 	return (
-		<SlideFade in>
-			<Flex
-				direction={isMine ? "row-reverse" : "row"}
-				alignSelf={isMine ? "flex-end" : "flex-start"}
-				gap={"2"}
-				alignItems={"flex-end"}
-				maxW={"60%"}
-			>
-				<Avatar
-					name={contact.displayName}
-					src={getAvatarUrl(contact.avatar)}
-					size={"sm"}
-					border={"2px solid"}
-					borderColor={"white"}
-				></Avatar>
+		<Flex direction={"column"} w="full">
+			<SlideFade in>
 				<Flex
-					bg={isMine ? "primary" : "white"}
-					color={isMine ? "white" : "black"}
-					p="4"
-					pb="2"
-					borderRadius={"xl"}
-					borderBottomLeftRadius={!isMine ? "0" : undefined}
-					borderBottomRightRadius={isMine ? "0" : undefined}
-					boxShadow="md"
-					direction={"column"}
+					direction={isMine ? "row-reverse" : "row"}
+					alignSelf={isMine ? "flex-end" : "flex-start"}
+					gap={"2"}
+					alignItems={"flex-end"}
 				>
-					<Text as="p" fontSize={"xs"}>
-						{message.content}
-					</Text>
-					<Text
-						mt="2"
-						fontSize={"xs"}
-						color={isMine ? "gray.200" : "gray"}
+					<Avatar
+						name={isMine ? user.displayName : contact.displayName}
+						src={getAvatarUrl(
+							isMine ? user.avatar : contact.avatar
+						)}
+						size={"sm"}
+						border={"2px solid"}
+						borderColor={"white"}
+					></Avatar>
+					<Flex
+						bg={isMine ? "primary" : "white"}
+						color={isMine ? "white" : "black"}
+						p="4"
+						pb="2"
+						borderRadius={"xl"}
+						borderBottomLeftRadius={!isMine ? "0" : undefined}
+						borderBottomRightRadius={isMine ? "0" : undefined}
+						boxShadow="md"
+						direction={"column"}
+						maxW={"50%"}
 					>
-						{dayjs(message.createdAt).format("hh:mm A")}
-					</Text>
+						<Text as="p" fontSize={"xs"}>
+							{message.content}
+						</Text>
+						{message.isTemp ? (
+							<Spinner size={"xs"} mt="2" />
+						) : (
+							<Text
+								mt="2"
+								fontSize={"xs"}
+								color={isMine ? "gray.200" : "gray"}
+							>
+								{dayjs(message.createdAt).format("hh:mm A")}
+							</Text>
+						)}
+					</Flex>
 				</Flex>
-			</Flex>
-		</SlideFade>
+			</SlideFade>
+		</Flex>
 	);
 };
