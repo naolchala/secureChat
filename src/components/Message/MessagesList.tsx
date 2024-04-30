@@ -30,11 +30,7 @@ export const MessagesList = () => {
 
 	const data = selectedContact ? messages[selectedContact.id] ?? [] : [];
 
-	if (
-		!messagesQuery.data ||
-		messagesQuery.data.length === 0 ||
-		data.length == 0
-	) {
+	if (data.length == 0) {
 		return (
 			<Flex
 				flex={"1"}

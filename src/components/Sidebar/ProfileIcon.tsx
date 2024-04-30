@@ -29,6 +29,7 @@ export const ProfileIcon = () => {
 		client.clear();
 		clearToken();
 		clearUser();
+		window.location.reload();
 		toast({
 			position: "top",
 			status: "warning",

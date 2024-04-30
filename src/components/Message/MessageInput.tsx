@@ -16,7 +16,7 @@ export const MessageInput = () => {
 
 	const handleSendMessage = (e: FormEvent) => {
 		e.preventDefault();
-		if (selectedContact && user) {
+		if (selectedContact && user && message) {
 			const tempId = v4();
 			socket.emit("SEND_MESSAGE", {
 				message,
@@ -33,8 +33,8 @@ export const MessageInput = () => {
 				updatedAt: new Date().toString(),
 				isTemp: true,
 			});
+			setMessage("");
 		}
-		setMessage("");
 	};
 
 	return (
@@ -77,6 +77,7 @@ export const MessageInput = () => {
 				colorScheme="primary"
 				variant={"ghost"}
 				type="submit"
+				disabled={!message}
 			>
 				<Icon as={IoSend} />
 			</IconButton>

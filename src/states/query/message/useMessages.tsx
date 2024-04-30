@@ -52,10 +52,14 @@ export const useMessages = create(
 				}),
 			addUserMessage: (userId, message) =>
 				set((state) => {
-					state.messages[userId] = [
-						message,
-						...state.messages[userId],
-					];
+					if (state.messages[userId] === undefined) {
+						state.messages[userId] = [message];
+					} else {
+						state.messages[userId] = [
+							message,
+							...state.messages[userId],
+						];
+					}
 				}),
 			removeUserMessage: (userId, messageId) =>
 				set((state) => {

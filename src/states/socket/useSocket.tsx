@@ -54,6 +54,7 @@ export const useSocket = () => {
 			});
 
 			socket.on("RECEIVE_MESSAGE", (req) => {
+				console.log("Received Message");
 				queryClient.invalidateQueries({
 					queryKey: [GET_CONTACTS],
 				});
