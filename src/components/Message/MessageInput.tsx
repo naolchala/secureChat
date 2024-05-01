@@ -6,20 +6,25 @@ import { useMessages } from "../../states/query/message/useMessages";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
 import { useUser } from "../../states/user/useUser";
 import { v4 } from "uuid";
+import { encryptMessage } from "../../utils/key";
+import { useServerKey } from "../../states/key/useServerKey";
 
 export const MessageInput = () => {
+	const { serverKey } = useServerKey();
 	const { user } = useUser();
 	const { selectedContact } = useSelectedContact();
 	const { addUserMessage } = useMessages();
 	const [message, setMessage] = useState("");
 	const socket = useSocket();
 
-	const handleSendMessage = (e: FormEvent) => {
+	const handleSendMessage = async (e: FormEvent) => {
 		e.preventDefault();
-		if (selectedContact && user && message) {
+		if (selectedContact && user && message && serverKey) {
+			const encryptedMessage = await encryptMessage(message, serverKey);
 			const tempId = v4();
+
 			socket.emit("SEND_MESSAGE", {
-				message,
+				message: encryptedMessage,
 				contact: selectedContact?.id,
 				tempId,
 			});

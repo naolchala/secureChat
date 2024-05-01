@@ -1,4 +1,6 @@
 import { axiosInstance, axiosWithToken } from "../utils/api";
+import { getKeys } from "../utils/key";
+import { getToken } from "../utils/token";
 import {
 	CurrentUserResponse,
 	LoginAPIProps,
@@ -31,10 +33,22 @@ const getCurrentUser = async () => {
 	return user;
 };
 
+const exchangeKey = async () => {
+	const { token } = getToken();
+	const { publicKey } = await getKeys(
+		token ?? (Math.random() * 10000).toString()
+	);
+	const serverKey = await axiosWithToken()
+		.post<string>("/key-exchange", { pubKey: publicKey })
+		.then((res) => res.data);
+	return serverKey;
+};
+
 const AuthAPI = {
 	login,
 	register,
 	getCurrentUser,
+	exchangeKey,
 };
 
 export default AuthAPI;

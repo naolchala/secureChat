@@ -19,7 +19,7 @@ type Action = {
 export const useSocketState = create<State & Action>((set) => ({
 	socket: io(BASE_URL, {
 		autoConnect: false,
-		reconnection: false,
+		reconnection: true,
 		auth: {
 			token: window.localStorage.getItem(TOKEN),
 		},

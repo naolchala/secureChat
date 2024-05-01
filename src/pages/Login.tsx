@@ -47,7 +47,7 @@ const LoginPage = () => {
 				},
 				onSuccess: () => {
 					setError(undefined);
-					navigate("/chat");
+					navigate("/");
 				},
 				onError: (err) => {
 					if (err instanceof AxiosError) {

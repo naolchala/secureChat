@@ -1,4 +1,11 @@
-import { Flex, Avatar, Text, SlideFade, Spinner } from "@chakra-ui/react";
+import {
+	Flex,
+	Avatar,
+	Text,
+	SlideFade,
+	Spinner,
+	SkeletonText,
+} from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { MessageResponse } from "../../api/message.types";
 import { useUser } from "../../states/user/useUser";
@@ -6,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { GET_CONTACTS } from "../../states/query/contact/useContacts";
 import { ContactResponse } from "../../api/contact.types";
 import { getAvatarUrl } from "../../utils/avatar";
+import { useDecryptedMessage } from "../../states/key/useDecryptedMessage";
 
 interface MessageProps {
 	message: MessageResponse & { isTemp?: boolean };
@@ -30,6 +38,8 @@ export const Message = ({ message }: MessageProps) => {
 		updatedAt: new Date().toUTCString(),
 		id: isMine ? message.receiver_id : message.sender_id,
 	};
+
+	const decryptedMessage = useDecryptedMessage(message.id, message.content);
 
 	return (
 		<Flex direction={"column"} w="full">
@@ -61,9 +71,27 @@ export const Message = ({ message }: MessageProps) => {
 						direction={"column"}
 						maxW={"50%"}
 					>
-						<Text as="p" fontSize={"xs"}>
-							{message.content}
-						</Text>
+						{message.isTemp ? (
+							<Text as="p" fontSize={"xs"}>
+								{message.content}
+							</Text>
+						) : (
+							<>
+								{decryptedMessage.isLoading && (
+									<SkeletonText noOfLines={2} />
+								)}
+								{decryptedMessage.data && (
+									<Text as="p" fontSize={"xs"}>
+										{decryptedMessage.data}
+									</Text>
+								)}
+								{decryptedMessage.isError && (
+									<Text as="p" fontSize={"xs"}>
+										{decryptedMessage.error.message}
+									</Text>
+								)}
+							</>
+						)}
 						{message.isTemp ? (
 							<Spinner size={"xs"} mt="2" />
 						) : (

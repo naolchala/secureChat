@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import AuthAPI from "../../../api/auth";
-import { useToken } from "../../../utils/token";
+import { getToken } from "../../../utils/token";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../user/useUser";
 
 export const CURRENT_USER = "CURRENT_USER";
 export const useCurrentUser = () => {
-	const { token } = useToken();
+	const { token } = getToken();
 	const { setUser } = useUser();
 	const router = useNavigate();
 	const query = useQuery({
-		queryKey: [CURRENT_USER],
+		queryKey: [CURRENT_USER, token],
 		queryFn: () => AuthAPI.getCurrentUser(),
 	});
 

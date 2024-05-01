@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { LoginAPIProps } from "../../../api/auth.types";
-import { useToken } from "../../../utils/token";
+import { getToken } from "../../../utils/token";
 import { useToast } from "@chakra-ui/react";
 import AuthAPI from "../../../api/auth";
 import { useUser } from "../../user/useUser";
@@ -8,7 +8,7 @@ import { useUser } from "../../user/useUser";
 export const LOGIN = "LOGIN";
 export const useLoginMutation = () => {
 	const { setUser } = useUser();
-	const { setToken } = useToken();
+	const { setToken } = getToken();
 	const toast = useToast();
 	const mutation = useMutation({
 		mutationKey: [LOGIN],

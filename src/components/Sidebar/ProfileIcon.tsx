@@ -15,21 +15,25 @@ import {
 } from "@chakra-ui/react";
 import { IoPersonCircle, IoExit } from "react-icons/io5";
 import { getAvatarUrl } from "../../utils/avatar";
-import { useToken } from "../../utils/token";
+import { getToken } from "../../utils/token";
 import { useUser } from "../../states/user/useUser";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSelectedContact } from "../../states/user/useSelectedUser";
+import { removeKeys } from "../../utils/key";
 
 export const ProfileIcon = () => {
 	const client = useQueryClient();
 	const toast = useToast();
-	const { clearToken } = useToken();
+	const { clearToken } = getToken();
 	const { clearUser, user } = useUser();
+	const { clear: clearSelectedContact } = useSelectedContact();
 
 	const handleLogout = () => {
 		client.clear();
 		clearToken();
 		clearUser();
-		window.location.reload();
+		clearSelectedContact();
+		removeKeys();
 		toast({
 			position: "top",
 			status: "warning",

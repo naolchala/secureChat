@@ -1,5 +1,5 @@
 export const TOKEN = "token";
-export const useToken = () => {
+export const getToken = () => {
 	const handleSetToken = (newToken: string) => {
 		window.localStorage.setItem("token", newToken);
 	};
