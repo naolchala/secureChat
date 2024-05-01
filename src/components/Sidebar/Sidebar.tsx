@@ -3,7 +3,6 @@ import {
 	HStack,
 	Icon,
 	Heading,
-	Button,
 	InputGroup,
 	InputLeftElement,
 	Input,
@@ -15,17 +14,19 @@ import { useState } from "react";
 import { ContactList } from "./ContactList";
 import { useAddContactMutation } from "../../states/query/contact/useAddContactMutation";
 
-const ChatModes = {
-	PERSONAL: "PERSONAL",
-	GROUP: "GROUP",
-};
-
 export const Sidebar = () => {
 	const addMutation = useAddContactMutation();
 	const [username, setUsername] = useState("");
-	const [selectedMode, setSelectedMode] = useState(ChatModes.PERSONAL);
 	return (
-		<Flex as="aside" w="300px" bg="background" direction={"column"} p="5">
+		<Flex
+			as="aside"
+			w={{ base: "full", md: "40%", lg: "300px" }}
+			h="full"
+			bg="background"
+			direction={"column"}
+			p="5"
+			borderRadius={{ base: "lg", md: "0" }}
+		>
 			<Flex alignItems={"center"} justifyContent={"space-between"}>
 				<HStack justifyContent={"center"} alignItems={"end"}>
 					<Icon as={IoLockClosed} fontSize={"3xl"} />
@@ -35,7 +36,7 @@ export const Sidebar = () => {
 				</HStack>
 				<ProfileIcon />
 			</Flex>
-			<Flex
+			{/* <Flex
 				bg="white"
 				p="2"
 				my="5"
@@ -58,11 +59,8 @@ export const Sidebar = () => {
 						{type.toLowerCase()}
 					</Button>
 				))}
-			</Flex>
-			<Flex flex={"1"}>
-				<ContactList />
-			</Flex>
-			<Flex gap="2" mt="2">
+			</Flex> */}
+			<Flex gap="2" my="5">
 				<InputGroup>
 					<InputLeftElement>
 						<Icon as={IoSearch} />
@@ -91,6 +89,9 @@ export const Sidebar = () => {
 				>
 					<Icon as={IoPersonAdd} />
 				</IconButton>
+			</Flex>
+			<Flex flex={"1"} mt="3">
+				<ContactList />
 			</Flex>
 		</Flex>
 	);
