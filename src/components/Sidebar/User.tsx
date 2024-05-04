@@ -36,7 +36,10 @@ export const User = ({ contact }: UserProps) => {
 				border={"2px solid"}
 				borderColor={"black"}
 			>
-				<AvatarBadge boxSize={"1em"} bg="primary" />
+				<AvatarBadge
+					boxSize={"1em"}
+					bg={contact.isOnline ? "primary" : "gray"}
+				/>
 			</Avatar>
 			<Flex direction={"column"}>
 				<Text fontWeight={"bold"} fontSize={"sm"}>

@@ -1,13 +1,14 @@
 import { Flex, IconButton, Icon, Input } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import { IoAttach, IoSend } from "react-icons/io5";
-import { useSocket } from "../../states/socket/useSocket";
 import { useMessages } from "../../states/query/message/useMessages";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
 import { useUser } from "../../states/user/useUser";
 import { v4 } from "uuid";
 import { encryptMessage } from "../../utils/key";
 import { useServerKey } from "../../states/key/useServerKey";
+import SocketKeys from "../../api/socket.types";
+import { socket } from "../../states/socket/socket";
 
 export const MessageInput = () => {
 	const { serverKey } = useServerKey();
@@ -15,7 +16,6 @@ export const MessageInput = () => {
 	const { selectedContact } = useSelectedContact();
 	const { addUserMessage } = useMessages();
 	const [message, setMessage] = useState("");
-	const socket = useSocket();
 
 	const handleSendMessage = async (e: FormEvent) => {
 		e.preventDefault();
@@ -23,7 +23,7 @@ export const MessageInput = () => {
 			const encryptedMessage = await encryptMessage(message, serverKey);
 			const tempId = v4();
 
-			socket.emit("SEND_MESSAGE", {
+			socket.emit(SocketKeys.SEND_MESSAGE, {
 				message: encryptedMessage,
 				contact: selectedContact?.id,
 				tempId,
@@ -38,6 +38,7 @@ export const MessageInput = () => {
 				updatedAt: new Date().toString(),
 				isTemp: true,
 			});
+
 			setMessage("");
 		}
 	};
