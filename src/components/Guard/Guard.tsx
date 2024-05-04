@@ -88,6 +88,7 @@ export const Guard = ({ children }: GuardProps) => {
 									return {
 										...contact,
 										isOnline: false,
+										isTyping: false,
 										updatedAt: new Date().toISOString(),
 									};
 								}
