@@ -2,6 +2,7 @@ import { Flex, Avatar, AvatarBadge, Text } from "@chakra-ui/react";
 import { getAvatarUrl } from "../../utils/avatar";
 import { ContactResponse } from "../../api/contact.types";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
+import { dateFormatter } from "../../config/day.config";
 
 interface UserProps {
 	contact: ContactResponse;
@@ -32,13 +33,15 @@ export const User = ({ contact }: UserProps) => {
 			<Avatar
 				name={contact.displayName}
 				src={getAvatarUrl(avatar)}
-				size={"sm"}
+				size={"md"}
 				border={"2px solid"}
 				borderColor={"black"}
 			>
 				<AvatarBadge
+					border={"2px solid"}
 					boxSize={"1em"}
-					bg={contact.isOnline ? "primary" : "gray"}
+					bg={contact.isOnline ? "primary.400" : "gray.200"}
+					boxShadow={"md"}
 				/>
 			</Avatar>
 			<Flex direction={"column"}>
@@ -47,6 +50,15 @@ export const User = ({ contact }: UserProps) => {
 				</Text>
 				<Text fontSize={"xs"} color={"gray"}>
 					{username}
+				</Text>
+				<Text fontSize={"xs"} color={"gray.600"}>
+					{contact.isOnline ? (
+						<Text color={"primary"} as="span">
+							online
+						</Text>
+					) : (
+						dateFormatter(contact.updatedAt).fromNow()
+					)}
 				</Text>
 			</Flex>
 		</Flex>

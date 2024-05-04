@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
-import { BASE_URL } from "../../utils/api";
-import { TOKEN } from "../../utils/token";
+import { BASE_URL } from "./api";
+import { TOKEN } from "./token";
 
 export const socket = io(BASE_URL, {
 	autoConnect: false,

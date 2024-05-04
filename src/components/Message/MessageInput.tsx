@@ -8,7 +8,7 @@ import { v4 } from "uuid";
 import { encryptMessage } from "../../utils/key";
 import { useServerKey } from "../../states/key/useServerKey";
 import SocketKeys from "../../api/socket.types";
-import { socket } from "../../states/socket/socket";
+import { socket } from "../../utils/socket";
 
 export const MessageInput = () => {
 	const { serverKey } = useServerKey();

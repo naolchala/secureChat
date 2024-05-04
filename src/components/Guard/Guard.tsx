@@ -2,7 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { useUser } from "../../states/user/useUser";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../../utils/token";
-import { socket } from "../../states/socket/socket";
+import { socket } from "../../utils/socket";
 import { MessageResponse } from "../../api/message.types";
 import { useMessages } from "../../states/query/message/useMessages";
 import SocketKeys from "../../api/socket.types";
@@ -30,7 +30,7 @@ export const Guard = ({ children }: GuardProps) => {
 	}, [user, navigate, token]);
 
 	useEffect(() => {
-		if (!socket.connected) {
+		if (!socket.connected && token) {
 			socket.connect();
 		}
 
@@ -83,7 +83,11 @@ export const Guard = ({ children }: GuardProps) => {
 						if (data) {
 							return data.map((contact) => {
 								if (contact.id == userId) {
-									return { ...contact, isOnline: false };
+									return {
+										...contact,
+										isOnline: false,
+										updatedAt: new Date().toISOString(),
+									};
 								}
 								return contact;
 							});
@@ -99,7 +103,7 @@ export const Guard = ({ children }: GuardProps) => {
 			socket.off(SocketKeys.FRIEND_OFFLINE);
 			socket.off(SocketKeys.FRIEND_ONLINE);
 		};
-	});
+	}, [addUserMessage, queryClient, replaceTempWithReal, token, user]);
 
 	return <>{children}</>;
 };
