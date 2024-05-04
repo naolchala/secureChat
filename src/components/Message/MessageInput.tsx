@@ -1,5 +1,5 @@
 import { Flex, IconButton, Icon, Input } from "@chakra-ui/react";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { IoAttach, IoSend } from "react-icons/io5";
 import { useMessages } from "../../states/query/message/useMessages";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 import { encryptMessage } from "../../utils/key";
 import { useServerKey } from "../../states/key/useServerKey";
 import SocketKeys from "../../api/socket.types";
+import { useDebouncedCallback } from "use-debounce";
 import { socket } from "../../utils/socket";
 
 export const MessageInput = () => {
@@ -16,6 +17,24 @@ export const MessageInput = () => {
 	const { selectedContact } = useSelectedContact();
 	const { addUserMessage } = useMessages();
 	const [message, setMessage] = useState("");
+	const [typing, setTyping] = useState(false);
+	const debounce = useDebouncedCallback(() => {
+		if (selectedContact) {
+			socket.emit(SocketKeys.TYPING_DONE, {
+				contactId: selectedContact.id,
+			});
+		}
+		setTyping(false);
+	}, 1000);
+
+	const handleMessageChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setMessage(e.target.value);
+		if (!typing) {
+			setTyping(true);
+			socket.emit(SocketKeys.TYPING, { contactId: selectedContact?.id });
+		}
+		debounce();
+	};
 
 	const handleSendMessage = async (e: FormEvent) => {
 		e.preventDefault();
@@ -73,7 +92,7 @@ export const MessageInput = () => {
 			</label>
 			<Input
 				value={message}
-				onChange={(e) => setMessage(e.target.value)}
+				onChange={handleMessageChange}
 				fontSize={"sm"}
 				variant={"unstyled"}
 				placeholder="Type your message here"

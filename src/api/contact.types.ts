@@ -7,4 +7,5 @@ export interface ContactResponse {
 	isOnline: boolean;
 	createdAt: string;
 	updatedAt: string;
+	isTyping?: boolean;
 }

@@ -9,6 +9,7 @@ import SocketKeys from "../../api/socket.types";
 import { GET_CONTACTS } from "../../states/query/contact/useContacts";
 import { useQueryClient } from "@tanstack/react-query";
 import { ContactResponse } from "../../api/contact.types";
+import { useSelectedContact } from "../../states/user/useSelectedUser";
 
 interface GuardProps {
 	children?: ReactNode;
@@ -17,6 +18,7 @@ interface GuardProps {
 export const Guard = ({ children }: GuardProps) => {
 	const { token } = getToken();
 	const { user } = useUser();
+	const { selectedContact, setSelectedContact } = useSelectedContact();
 	const { replaceTempWithReal, addUserMessage } = useMessages();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
@@ -95,6 +97,52 @@ export const Guard = ({ children }: GuardProps) => {
 					}
 				);
 			});
+
+			socket.on(SocketKeys.TYPING, (req) => {
+				const { contactId } = req as { contactId: string };
+				queryClient.setQueryData<ContactResponse[]>(
+					[GET_CONTACTS],
+					(data) => {
+						if (data) {
+							return data.map((contact) => {
+								if (contact.id == contactId) {
+									return {
+										...contact,
+										isTyping: true,
+									};
+								}
+								return contact;
+							});
+						}
+					}
+				);
+				if (selectedContact?.id == contactId) {
+					setSelectedContact({ ...selectedContact, isTyping: true });
+				}
+			});
+
+			socket.on(SocketKeys.TYPING_DONE, (req) => {
+				const { contactId } = req as { contactId: string };
+				queryClient.setQueryData<ContactResponse[]>(
+					[GET_CONTACTS],
+					(data) => {
+						if (data) {
+							return data.map((contact) => {
+								if (contact.id == contactId) {
+									return {
+										...contact,
+										isTyping: false,
+									};
+								}
+								return contact;
+							});
+						}
+					}
+				);
+				if (selectedContact?.id == contactId) {
+					setSelectedContact({ ...selectedContact, isTyping: false });
+				}
+			});
 		}
 
 		return () => {
@@ -102,8 +150,18 @@ export const Guard = ({ children }: GuardProps) => {
 			socket.off(SocketKeys.RECEIVE_MESSAGE);
 			socket.off(SocketKeys.FRIEND_OFFLINE);
 			socket.off(SocketKeys.FRIEND_ONLINE);
+			socket.off(SocketKeys.TYPING);
+			socket.off(SocketKeys.TYPING_DONE);
 		};
-	}, [addUserMessage, queryClient, replaceTempWithReal, token, user]);
+	}, [
+		addUserMessage,
+		queryClient,
+		replaceTempWithReal,
+		selectedContact,
+		setSelectedContact,
+		token,
+		user,
+	]);
 
 	return <>{children}</>;
 };

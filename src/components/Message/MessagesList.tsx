@@ -6,6 +6,7 @@ import {
 } from "../../states/query/message/useMessages";
 import { EmptyMessages } from "./EmptyMessages";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
+import { TypingMessage } from "./TypingMessage";
 
 export const MessagesList = () => {
 	const { messages } = useMessages();
@@ -78,6 +79,7 @@ export const MessagesList = () => {
 				},
 			}}
 		>
+			<TypingMessage />
 			{data.map((message) => (
 				<Message key={message.id} message={message} />
 			))}
