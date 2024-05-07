@@ -20,10 +20,12 @@ export const useSelectedContact = create(
 			setSelectedContact: (contact) =>
 				set((state) => {
 					state.selectedContact = contact;
+					state.selectedGroup = undefined;
 				}),
 			setSelectedGroup: (group) =>
 				set((state) => {
 					state.selectedGroup = group;
+					state.selectedContact = undefined;
 				}),
 			clear: () =>
 				set((state) => {

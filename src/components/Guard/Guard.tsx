@@ -10,6 +10,7 @@ import { GET_CONTACTS } from "../../states/query/contact/useContacts";
 import { useQueryClient } from "@tanstack/react-query";
 import { ContactResponse } from "../../api/contact.types";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
+import { ChatModes } from "../../states/chat/useChatMode";
 
 interface GuardProps {
 	children?: ReactNode;
@@ -43,11 +44,12 @@ export const Guard = ({ children }: GuardProps) => {
 					tempId: string;
 				};
 				if (user) {
-					const contactID =
-						message.sender_id == user?.id
-							? message.receiver_id
-							: message.sender_id;
-					replaceTempWithReal(contactID, tempId, message);
+					const contactID = message.group_id
+						? message.group_id
+						: message.sender_id == user?.id
+						? message.receiver_id
+						: message.sender_id;
+					replaceTempWithReal(contactID ?? "", tempId, message);
 				}
 			});
 
@@ -57,7 +59,11 @@ export const Guard = ({ children }: GuardProps) => {
 				});
 
 				const { message } = req as { message: MessageResponse };
-				addUserMessage(message.sender_id, message);
+				const id =
+					message.scope === ChatModes.GROUP
+						? message.group_id
+						: message.sender_id;
+				addUserMessage(id ?? "", message);
 			});
 
 			socket.on(SocketKeys.FRIEND_ONLINE, (req) => {

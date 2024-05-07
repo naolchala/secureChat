@@ -7,11 +7,14 @@ import {
 import { EmptyMessages } from "./EmptyMessages";
 import { useSelectedContact } from "../../states/user/useSelectedUser";
 import { TypingMessage } from "./TypingMessage";
+import { useChatMode } from "../../states/chat/useChatMode";
 
 export const MessagesList = () => {
 	const { messages } = useMessages();
-	const { selectedContact } = useSelectedContact();
-	const messagesQuery = useMessagesQuery();
+	const { selectedContact, selectedGroup } = useSelectedContact();
+	const { mode } = useChatMode();
+	const messagesQuery = useMessagesQuery(mode);
+
 	if (messagesQuery.isLoading) {
 		return (
 			<Flex
@@ -29,7 +32,11 @@ export const MessagesList = () => {
 		return <Text>Error</Text>;
 	}
 
-	const data = selectedContact ? messages[selectedContact.id] ?? [] : [];
+	const data = selectedContact
+		? messages[selectedContact.id] ?? []
+		: selectedGroup
+		? messages[selectedGroup?.id] ?? []
+		: [];
 
 	if (data.length == 0) {
 		return (

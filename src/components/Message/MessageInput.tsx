@@ -10,11 +10,13 @@ import { useServerKey } from "../../states/key/useServerKey";
 import SocketKeys from "../../api/socket.types";
 import { useDebouncedCallback } from "use-debounce";
 import { socket } from "../../utils/socket";
+import { ChatModes, useChatMode } from "../../states/chat/useChatMode";
 
 export const MessageInput = () => {
 	const { serverKey } = useServerKey();
 	const { user } = useUser();
-	const { selectedContact } = useSelectedContact();
+	const { mode } = useChatMode();
+	const { selectedContact, selectedGroup } = useSelectedContact();
 	const { addUserMessage } = useMessages();
 	const [message, setMessage] = useState("");
 	const [typing, setTyping] = useState(false);
@@ -38,22 +40,39 @@ export const MessageInput = () => {
 
 	const handleSendMessage = async (e: FormEvent) => {
 		e.preventDefault();
-		if (selectedContact && user && message && serverKey) {
+		if (
+			(selectedGroup || selectedContact) &&
+			user &&
+			message &&
+			serverKey
+		) {
 			const encryptedMessage = await encryptMessage(message, serverKey);
 			const tempId = v4();
+			const id =
+				ChatModes.GROUP && selectedGroup
+					? selectedGroup.id
+					: ChatModes.PERSONAL && selectedContact
+					? selectedContact.id
+					: undefined;
+
+			if (!id) {
+				return;
+			}
 
 			socket.emit(SocketKeys.SEND_MESSAGE, {
 				message: encryptedMessage,
-				contact: selectedContact?.id,
+				receiverId: id,
+				mode,
 				tempId,
 			});
 
-			addUserMessage(selectedContact.id, {
+			addUserMessage(id, {
 				id: tempId,
 				content: message,
 				createdAt: new Date().toString(),
 				sender_id: user?.id,
-				receiver_id: selectedContact.id,
+				receiver_id: id,
+				scope: mode,
 				updatedAt: new Date().toString(),
 				isTemp: true,
 			});
