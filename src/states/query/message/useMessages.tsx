@@ -10,7 +10,7 @@ import { useEffect } from "react";
 const GET_MESSAGES = "GET_MESSAGES";
 export const useMessagesQuery = () => {
 	const { selectedContact } = useSelectedContact();
-	const { setUserMessages } = useMessages();
+	const { setUserMessages, messages } = useMessages();
 	const query = useQuery({
 		queryKey: [GET_MESSAGES, selectedContact?.id],
 		queryFn: () =>
@@ -18,10 +18,11 @@ export const useMessagesQuery = () => {
 	});
 
 	useEffect(() => {
-		if (query.data && selectedContact) {
+		if (query.data && selectedContact && !messages[selectedContact.id]) {
+			console.log("RErunning this");
 			setUserMessages(selectedContact?.id, query.data);
 		}
-	}, [query.data, selectedContact, setUserMessages]);
+	}, [messages, query.data, selectedContact, setUserMessages]);
 
 	return query;
 };
