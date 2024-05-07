@@ -6,8 +6,8 @@ import { getAvatarUrl } from "../../utils/avatar";
 import { IoArrowBack } from "react-icons/io5";
 
 export const MessageContainer = () => {
-	const { selectedContact, clear } = useSelectedContact();
-	if (!selectedContact) return <></>;
+	const { selectedContact, selectedGroup, clear } = useSelectedContact();
+	if (!selectedContact || !selectedGroup) return <></>;
 
 	return (
 		<Flex
