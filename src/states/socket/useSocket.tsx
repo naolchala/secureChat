@@ -30,7 +30,7 @@ export const useSocket = () => {
 						message.sender_id == user?.id
 							? message.receiver_id
 							: message.sender_id;
-					replaceTempWithReal(contactID, tempId, message);
+					replaceTempWithReal(contactID ?? "", tempId, message);
 				}
 			});
 
