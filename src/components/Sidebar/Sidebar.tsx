@@ -8,8 +8,9 @@ import {
 	Input,
 	IconButton,
 	Button,
+	useDisclosure,
 } from "@chakra-ui/react";
-import { IoLockClosed, IoSearch, IoPersonAdd } from "react-icons/io5";
+import { IoLockClosed, IoSearch, IoPersonAdd, IoAdd } from "react-icons/io5";
 import { ProfileIcon } from "./ProfileIcon";
 import { useState } from "react";
 import { ContactList } from "./ContactList";
@@ -20,10 +21,12 @@ import {
 	useChatMode,
 } from "../../states/chat/useChatMode";
 import { GroupList } from "./GroupList";
+import { CreateGroup } from "../Group/CreateGroup";
 
 export const Sidebar = () => {
 	const { mode, setMode } = useChatMode();
 	const addMutation = useAddContactMutation();
+	const createDialog = useDisclosure();
 	const [username, setUsername] = useState("");
 	return (
 		<Flex
@@ -68,6 +71,22 @@ export const Sidebar = () => {
 					</Button>
 				))}
 			</Flex>
+			{mode === ChatModes.GROUP && (
+				<>
+					<CreateGroup {...createDialog} />
+					<Button
+						onClick={createDialog.onOpen}
+						colorScheme="primary"
+						variant={"outline"}
+						leftIcon={<Icon as={IoAdd} />}
+						size={"sm"}
+						fontWeight={"500"}
+						my="4"
+					>
+						Add new group
+					</Button>
+				</>
+			)}
 			<Flex flex={"1"} mt="3">
 				{mode == ChatModes.GROUP ? <GroupList /> : <ContactList />}
 			</Flex>

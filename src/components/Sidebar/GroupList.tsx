@@ -1,26 +1,12 @@
-import {
-	Flex,
-	Spinner,
-	Icon,
-	Button,
-	Text,
-	useDisclosure,
-} from "@chakra-ui/react";
-import {
-	IoWarning,
-	IoRefreshCircle,
-	IoPeopleOutline,
-	IoAdd,
-} from "react-icons/io5";
+import { Flex, Spinner, Icon, Button, Text } from "@chakra-ui/react";
+import { IoWarning, IoRefreshCircle, IoPeopleOutline } from "react-icons/io5";
 import { useGroups } from "../../states/query/group/useGroups";
 import { Group } from "./Group";
-import { CreateGroup } from "../Group/CreateGroup";
 import { useManageDialog } from "../../states/modal/useManageDialog";
 import { ManageGroupDialog } from "../Group/ManageGroup";
 
 export const GroupList = () => {
 	const manageDialog = useManageDialog();
-	const createDialog = useDisclosure();
 	const groupQuery = useGroups();
 
 	if (groupQuery.isLoading) {
@@ -93,7 +79,6 @@ export const GroupList = () => {
 	}
 	return (
 		<>
-			<CreateGroup {...createDialog} />
 			{manageDialog.group !== undefined && (
 				<ManageGroupDialog
 					{...manageDialog}
@@ -127,17 +112,6 @@ export const GroupList = () => {
 					},
 				}}
 			>
-				<Button
-					onClick={createDialog.onOpen}
-					colorScheme="primary"
-					variant={"outline"}
-					leftIcon={<Icon as={IoAdd} />}
-					size={"sm"}
-					fontWeight={"500"}
-					mb="4"
-				>
-					Add new group
-				</Button>
 				{groupQuery.data.map((group) => (
 					<Group key={group.id} group={group} />
 				))}
