@@ -86,7 +86,7 @@ export const Message = ({ message }: MessageProps) => {
 						borderBottomRightRadius={isMine ? "0" : undefined}
 						boxShadow="md"
 						direction={"column"}
-						maxW={"50%"}
+						maxW={{ base: "90%", lg: "50%" }}
 						overflow={"hidden"}
 						textOverflow={"clip"}
 					>
