@@ -4,6 +4,7 @@ import GroupAPI from "../../../api/group";
 import { useToast } from "@chakra-ui/react";
 import { GET_GROUPS } from "./useGroups";
 import { AxiosError } from "axios";
+import { GET_MEMBERS } from "./useMembers";
 
 export const REMOVE_MEMBER = "REMOVE_MEMBER";
 export const useRemoveMemberMutation = () => {
@@ -23,6 +24,9 @@ export const useRemoveMemberMutation = () => {
 			});
 			client.invalidateQueries({
 				queryKey: [GET_GROUPS],
+			});
+			client.invalidateQueries({
+				queryKey: [GET_MEMBERS],
 			});
 		},
 		onError: (error) => {

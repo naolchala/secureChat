@@ -1,6 +1,5 @@
 import {
 	Avatar,
-	Divider,
 	Flex,
 	HStack,
 	Heading,
@@ -24,7 +23,7 @@ import { getGroupAvatarUrl } from "../../utils/avatar";
 import { IoPersonAdd } from "react-icons/io5";
 import { useAddMemberMutation } from "../../states/query/group/useAddMemberMutation";
 import { useState } from "react";
-import { GroupMember } from "./GroupMember";
+import { MembersList } from "./MembersList";
 
 export interface ManageGroupDialogProps extends Omit<ModalProps, "children"> {
 	group: GroupResponse;
@@ -93,19 +92,7 @@ export const ManageGroupDialog = ({
 							</InputRightElement>
 						</InputGroup>
 					</Flex>
-					<Flex direction={"column"} gap={"1"}>
-						{group.Members.map((member, index, array) => (
-							<>
-								<GroupMember
-									member={member.user}
-									key={member.user.id}
-								/>
-								{index < array.length - 1 && (
-									<Divider borderColor="gray.300" />
-								)}
-							</>
-						))}
-					</Flex>
+					<MembersList />
 				</ModalBody>
 			</ModalContent>
 		</Modal>

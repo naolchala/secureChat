@@ -1,4 +1,5 @@
 import { axiosWithToken } from "../utils/api";
+import { ContactResponse } from "./contact.types";
 import {
 	AddMemberToGroupProps,
 	CreateGroupProps,
@@ -35,10 +36,18 @@ const removeMember = async (data: RemoveMemberFromGroupProps) => {
 	return res;
 };
 
+const getMembers = async (groupId: string) => {
+	const res = await axiosWithToken()
+		.get<ContactResponse[]>(`/group/${groupId}/members`)
+		.then((res) => res.data);
+	return res;
+};
+
 const GroupAPI = {
 	getGroups,
 	createGroup,
 	addMember,
 	removeMember,
+	getMembers,
 };
 export default GroupAPI;

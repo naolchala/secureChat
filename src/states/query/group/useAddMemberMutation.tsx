@@ -4,6 +4,7 @@ import GroupAPI from "../../../api/group";
 import { useToast } from "@chakra-ui/react";
 import { GET_GROUPS } from "./useGroups";
 import { AxiosError } from "axios";
+import { GET_MEMBERS } from "./useMembers";
 
 export const ADD_MEMBER = "ADD_MEMBER";
 export const useAddMemberMutation = () => {
@@ -22,6 +23,9 @@ export const useAddMemberMutation = () => {
 			});
 			client.invalidateQueries({
 				queryKey: [GET_GROUPS],
+			});
+			client.invalidateQueries({
+				queryKey: [GET_MEMBERS],
 			});
 		},
 		onError: (error) => {

@@ -112,11 +112,15 @@ export const Message = ({ message }: MessageProps) => {
 									});
 								}}
 							>
-								<Icon
-									as={IoDocumentAttach}
-									fontSize={"3xl"}
-									mr="5"
-								/>
+								{downloadFile.mutation.isPending ? (
+									<Spinner mr="5" />
+								) : (
+									<Icon
+										as={IoDocumentAttach}
+										fontSize={"3xl"}
+										mr="5"
+									/>
+								)}
 								<Flex direction={"column"} flex="1">
 									<Text
 										fontWeight={"bold"}
